@@ -1,4 +1,4 @@
-# Verify Identity
+# Verify User
 An experiement to verify a user's address and twitter account are linked without storing any user data.
 
 Please don't take this too seriously and use at your own risk. I cannot guarantee anonyminity. Suggestions + PRs welcomed :)
@@ -38,8 +38,10 @@ const options = {
 }
 ```
 
-### Dependencies
+## Dependencies
 - [`ar-wrapper`](https://github.com/verses-xyz/ar-wrapper)
 - [`twitter`](https://github.com/desmondmorris/node-twitter)
 - [`@ethersproject`](https://github.com/ethers-io/ethers.js)
-- [`uuid`](https://github.com/uuidjs/uuid)
+
+## Acknowledgements
+Thanks to [@verumlotus](https://github.com/verumlotus) for jamming on this idea with me.

@@ -1,12 +1,12 @@
 {
-  "name": "verify-identiy",
-  "version": "0.0.1",
+  "name": "verify-user",
+  "version": "0.0.2",
   "description": "verify your accounts are linked",
   "main": "index.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/straightupjac/verify-identity.git"
+    "url": "git+https://github.com/straightupjac/verify-user.git"
   },
   "files": [
     "index.js"
@@ -23,14 +23,17 @@
   "author": "straightupjac",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/straightupjac/verify-identity/issues"
+    "url": "https://github.com/straightupjac/verify-user/issues"
   },
-  "homepage": "https://github.com/straightupjac/verify-identity#readme",
+  "homepage": "https://github.com/straightupjac/verify-user#readme",
   "dependencies": {
     "@ethersproject/keccak256": "^5.6.1",
     "@ethersproject/strings": "^5.6.1",
     "ar-wrapper": "^1.2.0",
-    "twitter": "^1.7.1",
-    "uuid": "^8.3.2"
+    "crypto": "^1.0.1",
+    "twitter": "^1.7.1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }

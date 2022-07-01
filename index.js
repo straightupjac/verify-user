@@ -3,7 +3,7 @@ const Twitter = require('twitter');
 const { ArweaveClient } = require('ar-wrapper');
 const { keccak256 } = require('@ethersproject/keccak256');
 const { toUtf8Bytes } = require('@ethersproject/strings');
-const { v4: uuidv4 } = require('uuid');
+const { randomBytes } = require('crypto');
 
 const DEFAULT_OPTIONS = {
   projectName: 'verify_identity',
@@ -29,7 +29,7 @@ class VerifyIdentityClient {
   async getSalt(address) {
     // create new salt
     const createSalt = async (address) => {
-      const salt = uuidv4();
+      const salt = randomBytes(32).toString();
       const SALT_DOC = `${options.projectName}_salt`;
       const DOC_TYPE = `${options.projectName}_doc_type`;
       const tags = {};
