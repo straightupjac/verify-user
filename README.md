@@ -9,11 +9,11 @@ Please don't take this too seriously and use at your own risk. I cannot guarante
 
 To install:
 ```bash
-yarn add verify-web3-identity
+yarn add verify-user
 ```
 or
 ```bash
-npm install verify-web3-identity
+npm install verify-user
 ```
 
 Get started:
