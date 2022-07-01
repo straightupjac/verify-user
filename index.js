@@ -25,6 +25,21 @@ class VerifyIdentityClient {
     this.options = options;
   }
 
+  // get signature for verification
+  createTwitterSignature(twitterHandle, address) {
+    const salt = this.getSalt(address);
+    if (salt.msg === 'error') {
+      return {
+        msg: 'error getting salt'
+      }
+    }
+    const signature = keccak256(toUtf8Bytes([address, twitterHandle, salt].join('-')));
+    return {
+      msg: 'success',
+      signature
+    }
+  }
+
   // get salt, create a new one if one does not exist
   async getSalt(address) {
     // create new salt
@@ -72,21 +87,6 @@ class VerifyIdentityClient {
     const salt = await checkSalt(address);
     if (!salt) {
       return await createSalt(address);
-    }
-  }
-
-  // get signature for verification
-  async createTwitterSignature(twitterHandle, address) {
-    const salt = this.getSalt(address);
-    if (salt.msg === 'error') {
-      return {
-        msg: 'error getting salt'
-      }
-    }
-    const signature = keccak256(toUtf8Bytes([address, twitterHandle, salt].join('-')));
-    return {
-      msg: 'success',
-      signature
     }
   }
 
