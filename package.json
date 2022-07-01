@@ -32,8 +32,5 @@
     "ar-wrapper": "^1.2.0",
     "crypto": "^1.0.1",
     "twitter": "^1.7.1"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
