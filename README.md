@@ -1,7 +1,7 @@
 # Verify Identity
 An experiement to verify a user's address and twitter account are linked without storing any user data.
 
-Use at your own risk. I cannot guarantee anonyminity.
+Please don't take this too seriously and use at your own risk. I cannot guarantee anonyminity. Suggestions + PRs welcomed :)
 
 ## Prerequisites
 - Arweave public and private keys
