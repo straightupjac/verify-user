@@ -6,11 +6,11 @@ const { toUtf8Bytes } = require('@ethersproject/strings');
 const { randomBytes } = require('crypto');
 
 const DEFAULT_OPTIONS = {
-  projectName: 'verify_identity',
+  projectName: 'verify_user',
   twitterMessage: 'I am verifying my Twitter'
 }
 
-class VerifyIdentityClient {
+class VerifyUserClient {
   twitterClient;
   arweaveClient;
   options;
@@ -177,6 +177,6 @@ class VerifyIdentityClient {
 
 
 module.exports = {
-  VerifyIdentityClient,
+  VerifyUserClient,
   DEFAULT_OPTIONS,
 }

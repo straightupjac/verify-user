@@ -20,7 +20,7 @@ declare module "verify-user" {
     name?: string
   }
 
-  export class VerifyIdentityClient {
+  export class VerifyUserClient {
     // underlying twitter client
     twitterClient: Twitter;
     // underlying ar-wrapper client

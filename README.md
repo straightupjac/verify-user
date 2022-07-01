@@ -27,13 +27,13 @@ const twitterConfig = {
 const adminAddress = process.env.ARWEAVE_ADDRESS;
 const arweaveKeyfile = process.env.ARWEAVE_KEY;
 
-const client = new VerifyIdentityClient(twitterConfig, adminAddress, arweaveKeyfile);
+const client = new VerifyUserClient(twitterConfig, adminAddress, arweaveKeyfile);
 ```
 
 ### Customize Options
 ```ts
 const options = {
-  projectName: 'verify_identity', // used for arweave document naming
+  projectName: 'verify_user', // used for arweave document naming
   twitterMessage: 'I am verifying my Twitter' // used for verifying tweets
 }
 ```
