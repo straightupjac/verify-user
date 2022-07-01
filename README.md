@@ -42,6 +42,3 @@ const options = {
 - [`ar-wrapper`](https://github.com/verses-xyz/ar-wrapper)
 - [`twitter`](https://github.com/desmondmorris/node-twitter)
 - [`@ethersproject`](https://github.com/ethers-io/ethers.js)
-
-## Acknowledgements
-Thanks to [@verumlotus](https://github.com/verumlotus) for jamming on this idea with me.
