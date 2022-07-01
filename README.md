@@ -37,3 +37,9 @@ const options = {
   twitterMessage: 'I am verifying my Twitter' // used for verifying tweets
 }
 ```
+
+### Dependencies
+- [`ar-wrapper`](https://github.com/verses-xyz/ar-wrapper)
+- [`twitter`](https://github.com/desmondmorris/node-twitter)
+- [`@ethersproject`](https://github.com/ethers-io/ethers.js)
+- [`uuid`](https://github.com/uuidjs/uuid)
