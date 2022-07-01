@@ -15,3 +15,25 @@ or
 ```bash
 npm install verify-web3-identity
 ```
+
+Get started:
+```ts
+const twitterConfig = {
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  bearer_token: process.env.BEARER_TOKEN,
+}
+
+const adminAddress = process.env.ARWEAVE_ADDRESS;
+const arweaveKeyfile = process.env.ARWEAVE_KEY;
+
+const client = new VerifyIdentityClient(twitterConfig, adminAddress, arweaveKeyfile);
+```
+
+### Customize Options
+```ts
+const options = {
+  projectName: 'verify_identity', // used for arweave document naming
+  twitterMessage: 'I am verifying my Twitter' // used for verifying tweets
+}
+```
