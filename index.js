@@ -20,14 +20,15 @@ class VerifyUserClient {
       consumer_secret: twitterConfig.consumer_secret,
       bearer_token: twitterConfig.bearer_token,
     })
+
     this.arweaveClient = new ArweaveClient(adminAddress, arweaveKeyfile);
     this.options = options;
   }
 
   // get hash for verification
   // optionally generated client side
-  createTwitterVerification(handle, address) {
-    const salt = this.getSalt(keccak256(address));
+  async createTwitterVerification(handle, address) {
+    const salt = await this.getSalt(keccak256(address));
     if (salt.msg === 'error') {
       return {
         msg: 'error getting salt'
@@ -141,7 +142,6 @@ class VerifyUserClient {
   // twitter handle and signature (verification hash) required, no address stored
   // optional: name, to display
   async verifyTwitter(handle, signature) {
-
     const storeVerifiedTwitter = async (handle, verificationHash) => {
       const DOC_TYPE = `${this.options.projectName}_doc_type`;
       const VERIFICATION_DOC = `${this.options.projectName}_verification`;
@@ -154,7 +154,7 @@ class VerifyUserClient {
       if (doc.posted) {
         return {
           msg: 'success',
-          name,
+          signature: verificationHash,
         };
       } else {
         return {
@@ -169,28 +169,36 @@ class VerifyUserClient {
       include_rts: false,
       count: 5,
       tweet_mode: 'extended',
-    }, (error, tweets, _) => {
+    }, async (error, tweets, _) => {
       if (!error) {
         for (const tweet of tweets) {
           if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(signature))) {
-            if (name) {
-              storeVerifiedTwitter(handle, signature).then((data) => {
-                return {
-                  msg: 'succesfully verified twitter',
-                  data: data
-                }
-              })
+            try {
+              return {
+                msg: 'error: succesfully verified twitter but unable to store'
+              }
+              return await storeVerifiedTwitter(handle, signature);
+            } catch (err) {
+              return {
+                msg: 'error: succesfully verified twitter but unable to store',
+                data: err
+              }
             }
-            break;
           }
+        }
+        return {
+          msg: 'error: no matching tweets found'
         }
       }
       else {
         return {
-          msg: 'could not find verified tweet'
+          msg: 'error: verifying error'
         }
       }
     });
+    return {
+      msg: 'error: could not connect to twitter client'
+    }
   }
 
   // check if user is verified
