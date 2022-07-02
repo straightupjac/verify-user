@@ -3,7 +3,6 @@ const Twitter = require('twitter');
 const { ArweaveClient } = require('ar-wrapper');
 const { keccak256 } = require('@ethersproject/keccak256');
 const { toUtf8Bytes } = require('@ethersproject/strings');
-const { randomBytes } = require('crypto');
 
 const DEFAULT_OPTIONS = {
   projectName: 'verify_user',
@@ -25,31 +24,32 @@ class VerifyUserClient {
     this.options = options;
   }
 
-  // get signature for verification
-  createTwitterSignature(twitterHandle, address) {
-    const salt = this.getSalt(address);
+  // get hash for verification
+  // optionally generated client side
+  createTwitterVerification(handle, address) {
+    const salt = this.getSalt(keccak256(address));
     if (salt.msg === 'error') {
       return {
         msg: 'error getting salt'
       }
     }
-    const signature = keccak256(toUtf8Bytes([address, twitterHandle, salt].join('-')));
+    const verification = keccak256(toUtf8Bytes([address, handle, salt].join('-')));
     return {
       msg: 'success',
-      signature
+      verification
     }
   }
 
   // get salt, create a new one if one does not exist
-  async getSalt(address) {
+  async getSalt(hashedAddress) {
     // create new salt
-    const createSalt = async (address) => {
+    const createSalt = async (hashedAddress) => {
       const salt = randomBytes(32).toString();
       const SALT_DOC = `${options.projectName}_salt`;
       const DOC_TYPE = `${options.projectName}_doc_type`;
       const tags = {};
       tags[DOC_TYPE] = 'salt';
-      tags['address'] = keccak256(address);
+      tags['address'] = hashedAddress;
       tags['salt'] = salt;
 
       const doc = await this.arweaveClient.addDocument(SALT_DOC, salt, tags);
@@ -66,9 +66,9 @@ class VerifyUserClient {
     }
 
     // query salt
-    const checkSalt = async (address) => {
+    const checkSalt = async (hashedAddress) => {
       const tags = {
-        address: keccak256(address),
+        address: hashedAddress,
       };
       tags[`${options.projectName}_doc_type`] = 'salt';
       const saltDoc = await this.arweaveClient.getDocumentsByTags(tags)
@@ -84,33 +84,33 @@ class VerifyUserClient {
       }
     }
 
-    const salt = await checkSalt(address);
+    const salt = await checkSalt(hashedAddress);
     if (!salt) {
-      return await createSalt(address);
+      return await createSalt(hashedAddress);
     }
   }
 
   // store signature and name
-  // name should not be traceable back to twitter
-  async storeSignature(signature, name = '') {
-    if (!signature) {
+  // username should not be traceable back to twitter
+  // signedMessage to verify user owns account
+  async storeSignature(signedMessage, username) {
+    if (!signedMessage) {
       return {
-        msg: 'error, no signature provided'
+        msg: 'error, missing required fields'
       }
     }
     const SIG_DOC = `${options.projectName}_signature`;
     const DOC_TYPE = `${options.projectName}_doc_type`;
     const tags = {};
     tags[DOC_TYPE] = 'signature';
-    tags['signature'] = signature;
-    tags['name'] = name;
+    tags['username'] = username;
+    tags['signedMessage'] = keccak256(toUtf8Bytes(signedMessage));
 
-    const doc = await this.arweaveClient.addDocument(SIG_DOC, name, tags);
+    const doc = await this.arweaveClient.addDocument(SIG_DOC, keccak256(toUtf8Bytes(signedMessage)), tags);
     if (doc.posted) {
       return {
         msg: 'success',
-        signature,
-        name,
+        username,
       };
     } else {
       return {
@@ -119,19 +119,17 @@ class VerifyUserClient {
     }
   }
 
-  async getSignature(twitterHandle, address) {
-    const signature = this.createTwitterSignature(twitterHandle, address);
+  // get signature from arweave
+  async getUser(signedMessage) {
     const tags = {
-      signature: signature,
+      signedMessage: keccak256(toUtf8Bytes(signedMessage)),
     };
-
     tags[`${options.projectName}_doc_type`] = 'signature';
     const sigDoc = await this.arweaveClient.getDocumentsByTags(tags)
     if (sigDoc.length > 0) {
       return {
         msg: 'success',
-        name: sigDoc[0].name,
-        signature: sigDoc.signature,
+        name: sigDoc[0].username,
       }
     } else {
       return {
@@ -140,18 +138,32 @@ class VerifyUserClient {
     }
   }
 
-  // twitter handle and account address required
+  // twitter handle and signature (verification hash) required, no address stored
   // optional: name, to display
-  async verifyTwitter(twitterHandle, address, name = '') {
-    const salt = this.getSalt(address);
-    if (salt.msg === 'error') {
-      return {
-        msg: 'error getting salt'
+  async verifyTwitter(handle, signature) {
+
+    const storeVerifiedTwitter = async (handle, verificationHash) => {
+      const DOC_TYPE = `${options.projectName}_doc_type`;
+      const VERIFICATION_DOC = `${options.projectName}_verification`;
+      const tags = {
+        hash: verificationHash,
+        handle,
+      };
+      tags[DOC_TYPE] = 'verification';
+      const doc = await this.arweaveClient.addDocument(VERIFICATION_DOC, verificationHash, tags);
+      if (doc.posted) {
+        return {
+          msg: 'success',
+          name,
+        };
+      } else {
+        return {
+          msg: 'error adding verification hash'
+        }
       }
     }
 
     const tweetTemplate = `${this.options.twitterMessage}`
-    const signature = keccak256(toUtf8Bytes([address, twitterHandle, salt].join('-')));
     this.twitterClient.get('statuses/user_timeline', {
       screen_name: handle,
       include_rts: false,
@@ -161,7 +173,14 @@ class VerifyUserClient {
       if (!error) {
         for (const tweet of tweets) {
           if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(signature))) {
-            const res = this.storeSignature(signature, name);
+            if (name) {
+              storeVerifiedTwitter(handle, signature).then((data) => {
+                return {
+                  msg: 'succesfully verified twitter',
+                  data: data
+                }
+              })
+            }
             break;
           }
         }
@@ -172,6 +191,27 @@ class VerifyUserClient {
         }
       }
     });
+  }
+
+  // check if user is verified
+  async isVerifiedTwitter(handle) {
+    const DOC_TYPE = `${options.projectName}_doc_type`;
+    const tags = {
+      handle: handle,
+    };
+    tags[DOC_TYPE] = 'verification';
+
+    const verfiedDoc = await this.arweaveClient.getDocumentsByTags(tags)
+    if (verfiedDoc.length > 0) {
+      return {
+        msg: 'success user is verified',
+        salt: saltDoc[0].tags.hash,
+      }
+    } else {
+      return {
+        msg: 'user not found',
+      };
+    }
   }
 }
 

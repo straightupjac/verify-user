@@ -31,20 +31,23 @@ declare module "verify-user" {
     // Construct a new client given Twitter Developer API config and arweave account data
     constructor(twitterConfig: ITwitterConfig, adminAddress: string, arweaveKeyfile: string, options?: IOptions)
 
-    // get salt associated with an address, create a new one if one does not exist
-    getSalt(address: string): Promise<IReturn>
-
     // create a signature to use for Twitter verification
-    createTwitterSignature(twitterHandle: string, address: string): string
+    // optional usage - can generate client side as well
+    createTwitterVerification(handle: string, address: string): string
 
-    // store signature and name on Arweave
-    storeSignature(signature: string, name?: string): Promise<IReturn>
+    // get salt associated with a hashedAddress (keccak256 with 0x prefix), create a new one if one does not exist
+    getSalt(hashedAddress: string): Promise<IReturn>
 
-    // get signature from Arweave
-    getSignature(signature: string, name?: string): Promise<IReturn>
+    // store encrypted signedMessage and name on Arweave
+    storeSignature(signedMessage: string, username: string): Promise<IReturn>
 
-    // twitter handle and account address required
+    // get user from Arweave with signed message
+    getUser(signedMessage: string): Promise<IReturn>
+
+    // twitter handle and signature required
     // optional: name, to display
-    verifyTwitter(twitterHandle: string, address: string, name?: string): Promise<IReturn>
+    verifyTwitter(twitterHandle: string, signature: string, name?: string): Promise<IReturn>
+
+    isVerifiedTwitter(handle: string): Promise<IReturn>
   }
 }
