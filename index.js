@@ -45,8 +45,8 @@ class VerifyUserClient {
     // create new salt
     const createSalt = async (hashedAddress) => {
       const salt = randomBytes(32).toString();
-      const SALT_DOC = `${options.projectName}_salt`;
-      const DOC_TYPE = `${options.projectName}_doc_type`;
+      const SALT_DOC = `${this.options.projectName}_salt`;
+      const DOC_TYPE = `${this.options.projectName}_doc_type`;
       const tags = {};
       tags[DOC_TYPE] = 'salt';
       tags['address'] = hashedAddress;
@@ -70,7 +70,7 @@ class VerifyUserClient {
       const tags = {
         address: hashedAddress,
       };
-      tags[`${options.projectName}_doc_type`] = 'salt';
+      tags[`${this.options.projectName}_doc_type`] = 'salt';
       const saltDoc = await this.arweaveClient.getDocumentsByTags(tags)
       if (saltDoc.length > 0) {
         return {
@@ -99,8 +99,8 @@ class VerifyUserClient {
         msg: 'error, missing required fields'
       }
     }
-    const SIG_DOC = `${options.projectName}_signature`;
-    const DOC_TYPE = `${options.projectName}_doc_type`;
+    const SIG_DOC = `${this.options.projectName}_signature`;
+    const DOC_TYPE = `${this.options.projectName}_doc_type`;
     const tags = {};
     tags[DOC_TYPE] = 'signature';
     tags['username'] = username;
@@ -124,7 +124,7 @@ class VerifyUserClient {
     const tags = {
       signedMessage: keccak256(toUtf8Bytes(signedMessage)),
     };
-    tags[`${options.projectName}_doc_type`] = 'signature';
+    tags[`${this.options.projectName}_doc_type`] = 'signature';
     const sigDoc = await this.arweaveClient.getDocumentsByTags(tags)
     if (sigDoc.length > 0) {
       return {
@@ -143,8 +143,8 @@ class VerifyUserClient {
   async verifyTwitter(handle, signature) {
 
     const storeVerifiedTwitter = async (handle, verificationHash) => {
-      const DOC_TYPE = `${options.projectName}_doc_type`;
-      const VERIFICATION_DOC = `${options.projectName}_verification`;
+      const DOC_TYPE = `${this.options.projectName}_doc_type`;
+      const VERIFICATION_DOC = `${this.options.projectName}_verification`;
       const tags = {
         hash: verificationHash,
         handle,
@@ -195,7 +195,7 @@ class VerifyUserClient {
 
   // check if user is verified
   async isVerifiedTwitter(handle) {
-    const DOC_TYPE = `${options.projectName}_doc_type`;
+    const DOC_TYPE = `${this.options.projectName}_doc_type`;
     const tags = {
       handle: handle,
     };
