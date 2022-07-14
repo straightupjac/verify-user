@@ -20,6 +20,7 @@ class VerifyUserClient {
       consumer_secret: twitterConfig.consumer_secret,
       bearer_token: twitterConfig.bearer_token,
     })
+
     this.arweaveClient = new ArweaveClient(adminAddress, arweaveKeyfile);
     this.options = options;
   }
@@ -116,8 +117,8 @@ class VerifyUserClient {
         msg: 'error, missing required fields'
       }
     }
-    const SIG_DOC = `${options.projectName}_signature`;
-    const DOC_TYPE = `${options.projectName}_doc_type`;
+    const SIG_DOC = `${this.options.projectName}_signature`;
+    const DOC_TYPE = `${this.options.projectName}_doc_type`;
     const tags = {};
     tags[DOC_TYPE] = 'signature';
     tags['username'] = username;
@@ -141,7 +142,7 @@ class VerifyUserClient {
     const tags = {
       signedMessage: keccak256(toUtf8Bytes(signedMessage)),
     };
-    tags[`${options.projectName}_doc_type`] = 'signature';
+    tags[`${this.options.projectName}_doc_type`] = 'signature';
     const sigDoc = await this.arweaveClient.getDocumentsByTags(tags)
     if (sigDoc.length > 0) {
       return {
