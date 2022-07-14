@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-07-14T01:23:13.227Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="TUxiQOJrM8UazJb-yj8V" version="20.1.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-07-14T01:54:34.272Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="BY8uU6hQMpdL4Beh5XbT" version="20.1.1" type="github">
   <diagram id="frotmppnRAkI8_DNOgKx" name="Page-1">
-    <mxGraphModel dx="1223" dy="741" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="702" dy="454" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -40,7 +40,7 @@
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.522;entryY=-0.009;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-14" target="CW7KyH0B0hUuFeBV_yyw-22">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="CW7KyH0B0hUuFeBV_yyw-14" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Sign message - Hello, @HANDLE...&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-14" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Sign message - Hello, @userID (twitter API get id)...&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
           <mxGeometry x="50" y="420" width="147.5" height="60" as="geometry" />
         </mxCell>
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-16" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;after verifying that the right account tweeted it with twitter API (verificationHash)&lt;br&gt;&lt;br&gt;save only&lt;br&gt;sha256(signed message) -&amp;gt; in-app username&lt;br&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
@@ -67,7 +67,7 @@
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-21" target="CW7KyH0B0hUuFeBV_yyw-18">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="CW7KyH0B0hUuFeBV_yyw-21" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Sign message - Hello, @HANDLE...&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-21" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Sign message - Hello, @userID...&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
           <mxGeometry x="280" y="420" width="180" height="30" as="geometry" />
         </mxCell>
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.39;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-22" target="CW7KyH0B0hUuFeBV_yyw-16">
@@ -75,6 +75,9 @@
         </mxCell>
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-22" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;generate some verificationHash (crypto random bytes) to post on twitter&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
           <mxGeometry x="42.5" y="510" width="156.5" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-32" value="Notes:&lt;br&gt;Using Twitter account&#39;s userID over handle because users may change their handle over time but the id remains the same. ID can be retrieved via Twitter API" style="whiteSpace=wrap;html=1;fontSize=11;strokeWidth=0;" vertex="1" parent="1">
+          <mxGeometry x="550" y="390" width="270" height="180" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
