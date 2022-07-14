@@ -26,67 +26,84 @@ class VerifyUserClient {
 
   // get hash for verification
   // optionally generated client side
-  createTwitterVerification(handle, address) {
-    const salt = this.getSalt(keccak256(address));
-    if (salt.msg === 'error') {
-      return {
-        msg: 'error getting salt'
-      }
-    }
-    const verification = keccak256(toUtf8Bytes([address, handle, salt].join('-')));
+  createTwitterVerificationHash(handle, address) {
+    const salt = randomBytes(32).toString();
+    const hash = keccak256(toUtf8Bytes([address, handle, salt].join('-')));
     return {
       msg: 'success',
-      verification
+      hash
     }
   }
 
-  // get salt, create a new one if one does not exist
-  async getSalt(hashedAddress) {
-    // create new salt
-    const createSalt = async (hashedAddress) => {
-      const salt = randomBytes(32).toString();
-      const SALT_DOC = `${options.projectName}_salt`;
+  // twitter handle and verification hash required, no address stored
+  // verification hash and handle are stored
+  async verifyTwitter(handle, verificationHash) {
+    const storeVerifiedTwitter = async (handle, verificationHash) => {
       const DOC_TYPE = `${options.projectName}_doc_type`;
-      const tags = {};
-      tags[DOC_TYPE] = 'salt';
-      tags['address'] = hashedAddress;
-      tags['salt'] = salt;
-
-      const doc = await this.arweaveClient.addDocument(SALT_DOC, salt, tags);
+      const VERIFICATION_DOC = `${options.projectName}_verification`;
+      const tags = {
+        hash: verificationHash,
+        handle,
+      };
+      tags[DOC_TYPE] = 'verification';
+      const doc = await this.arweaveClient.addDocument(VERIFICATION_DOC, verificationHash, tags);
       if (doc.posted) {
         return {
           msg: 'success',
-          salt,
         };
       } else {
         return {
-          msg: 'error'
+          msg: 'error adding verification hash'
         }
       }
     }
 
-    // query salt
-    const checkSalt = async (hashedAddress) => {
-      const tags = {
-        address: hashedAddress,
+    const tweetTemplate = `${this.options.twitterMessage}`
+    this.twitterClient.get('statuses/user_timeline', {
+      screen_name: handle,
+      include_rts: false,
+      count: 5,
+      tweet_mode: 'extended',
+    }, (error, tweets, _) => {
+      if (!error) {
+        for (const tweet of tweets) {
+          if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(verificationHash))) {
+            storeVerifiedTwitter(handle, verificationHash).then((data) => {
+              return {
+                msg: 'succesfully verified twitter',
+                data: data
+              }
+            })
+            break;
+          }
+        }
+      }
+      else {
+        return {
+          msg: 'could not find verified tweet'
+        }
+      }
+    });
+  }
+
+  // check if user is verified
+  async isVerifiedTwitter(handle) {
+    const DOC_TYPE = `${options.projectName}_doc_type`;
+    const tags = {
+      handle: handle,
+    };
+    tags[DOC_TYPE] = 'verification';
+
+    const verfiedDoc = await this.arweaveClient.getDocumentsByTags(tags)
+    if (verfiedDoc.length > 0) {
+      return {
+        msg: 'success user is verified',
+        hash: saltDoc[0].tags.hash,
+      }
+    } else {
+      return {
+        msg: 'user not found',
       };
-      tags[`${options.projectName}_doc_type`] = 'salt';
-      const saltDoc = await this.arweaveClient.getDocumentsByTags(tags)
-      if (saltDoc.length > 0) {
-        return {
-          msg: 'success',
-          salt: saltDoc[0].content,
-        }
-      } else {
-        return {
-          msg: 'error',
-        };
-      }
-    }
-
-    const salt = await checkSalt(hashedAddress);
-    if (!salt) {
-      return await createSalt(hashedAddress);
     }
   }
 
@@ -129,87 +146,11 @@ class VerifyUserClient {
     if (sigDoc.length > 0) {
       return {
         msg: 'success',
-        name: sigDoc[0].username,
+        username: sigDoc[0].username,
       }
     } else {
       return {
         msg: "error couldn't find user",
-      };
-    }
-  }
-
-  // twitter handle and signature (verification hash) required, no address stored
-  // optional: name, to display
-  async verifyTwitter(handle, signature) {
-
-    const storeVerifiedTwitter = async (handle, verificationHash) => {
-      const DOC_TYPE = `${options.projectName}_doc_type`;
-      const VERIFICATION_DOC = `${options.projectName}_verification`;
-      const tags = {
-        hash: verificationHash,
-        handle,
-      };
-      tags[DOC_TYPE] = 'verification';
-      const doc = await this.arweaveClient.addDocument(VERIFICATION_DOC, verificationHash, tags);
-      if (doc.posted) {
-        return {
-          msg: 'success',
-          name,
-        };
-      } else {
-        return {
-          msg: 'error adding verification hash'
-        }
-      }
-    }
-
-    const tweetTemplate = `${this.options.twitterMessage}`
-    this.twitterClient.get('statuses/user_timeline', {
-      screen_name: handle,
-      include_rts: false,
-      count: 5,
-      tweet_mode: 'extended',
-    }, (error, tweets, _) => {
-      if (!error) {
-        for (const tweet of tweets) {
-          if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(signature))) {
-            if (name) {
-              storeVerifiedTwitter(handle, signature).then((data) => {
-                return {
-                  msg: 'succesfully verified twitter',
-                  data: data
-                }
-              })
-            }
-            break;
-          }
-        }
-      }
-      else {
-        return {
-          msg: 'could not find verified tweet'
-        }
-      }
-    });
-  }
-
-  // check if user is verified
-  async isVerifiedTwitter(handle) {
-    const DOC_TYPE = `${options.projectName}_doc_type`;
-    const tags = {
-      handle: handle,
-    };
-    tags[DOC_TYPE] = 'verification';
-
-    const verfiedDoc = await this.arweaveClient.getDocumentsByTags(tags)
-    if (verfiedDoc.length > 0) {
-      return {
-        msg: 'success user is verified',
-        salt: saltDoc[0].tags.hash,
-      }
-    } else {
-      return {
-        msg: 'user not found',
       };
     }
   }

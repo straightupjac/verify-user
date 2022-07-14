@@ -13,11 +13,29 @@ declare module "verify-user" {
     bearer_token: string;
   }
 
+  // return type for storeSignature and getUser
   export interface IReturn {
     msg: string;
-    salt?: string;
-    signature?: string;
-    name?: string
+    username?: string
+  }
+
+  // return type for createTwitterVerificationHash
+  export interface ITwitterVerificationReturn {
+    msg: string;
+    hash: string;
+  }
+
+  // return type for isVerifiedTwitter
+
+  export interface IIsVerifiedTwitterReturn {
+    msg: string;
+    hash?: string;
+  }
+
+  // return type for verifyTwitter
+  export interface IVerifyTwitterReturn {
+    msg: string;
+    data: string;
   }
 
   export class VerifyUserClient {
@@ -33,21 +51,19 @@ declare module "verify-user" {
 
     // create a signature to use for Twitter verification
     // optional usage - can generate client side as well
-    createTwitterVerification(handle: string, address: string): string
+    createTwitterVerificationHash(handle: string, address: string): ITwitterVerificationReturn
 
-    // get salt associated with a hashedAddress (keccak256 with 0x prefix), create a new one if one does not exist
-    getSalt(hashedAddress: string): Promise<IReturn>
+    // twitter handle and signature required
+    // optional: name, to display
+    verifyTwitter(handle: string, verificationHash: string): Promise<IVerifyTwitterReturn>
+
+    // check if given handle has been previously verified
+    isVerifiedTwitter(handle: string): Promise<IIsVerifiedTwitterReturn>
 
     // store encrypted signedMessage and name on Arweave
     storeSignature(signedMessage: string, username: string): Promise<IReturn>
 
     // get user from Arweave with signed message
     getUser(signedMessage: string): Promise<IReturn>
-
-    // twitter handle and signature required
-    // optional: name, to display
-    verifyTwitter(twitterHandle: string, signature: string, name?: string): Promise<IReturn>
-
-    isVerifiedTwitter(handle: string): Promise<IReturn>
   }
 }
