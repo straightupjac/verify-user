@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-07-13T22:41:58.128Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="1TRumGr3lPx37iaIbWG5" version="20.1.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-07-14T01:23:13.227Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" etag="TUxiQOJrM8UazJb-yj8V" version="20.1.1" type="github">
   <diagram id="frotmppnRAkI8_DNOgKx" name="Page-1">
-    <mxGraphModel dx="1214" dy="753" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1223" dy="741" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -43,8 +43,8 @@
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-14" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Sign message - Hello, @HANDLE...&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
           <mxGeometry x="50" y="420" width="147.5" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="CW7KyH0B0hUuFeBV_yyw-16" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;after verifying that the right account tweeted it&lt;br&gt;&lt;br&gt;save 2 things&lt;br&gt;&lt;br&gt;twitterVerificationHash -&amp;gt; twitter handle&lt;br&gt;&lt;br&gt;sha256(signed message) -&amp;gt; app username&lt;br&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="42" y="630" width="201.25" height="290" as="geometry" />
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-16" value="&lt;span style=&quot;font-size: 15px;&quot;&gt;after verifying that the right account tweeted it with twitter API (verificationHash)&lt;br&gt;&lt;br&gt;save only&lt;br&gt;sha256(signed message) -&amp;gt; in-app username&lt;br&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="42" y="630" width="198" height="200" as="geometry" />
         </mxCell>
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-17" target="CW7KyH0B0hUuFeBV_yyw-21">
           <mxGeometry relative="1" as="geometry" />
@@ -55,13 +55,13 @@
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-18" target="CW7KyH0B0hUuFeBV_yyw-19">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="CW7KyH0B0hUuFeBV_yyw-18" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;find that we&#39;ve previously verified this twitter handle + address pair using hash of the signature&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-18" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;find that we&#39;ve previously verified this user using hash of the signature&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
           <mxGeometry x="280" y="480" width="180" height="100" as="geometry" />
         </mxCell>
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-19" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;username/userID is associated with this pair that can be used to identify user on the app&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
           <mxGeometry x="280" y="620" width="180" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="CW7KyH0B0hUuFeBV_yyw-20" value="Store:&amp;nbsp;&lt;br&gt;&lt;br&gt;Hash(signed message) -&amp;gt; username&lt;br&gt;&lt;br&gt;verificationHash -&amp;gt; twitter handle" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;strokeWidth=0;" vertex="1" parent="1">
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-20" value="Store:&amp;nbsp;&lt;br&gt;&lt;br&gt;Hash(signed message) -&amp;gt; username" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;strokeWidth=0;" vertex="1" parent="1">
           <mxGeometry x="560" y="160" width="240" height="190" as="geometry" />
         </mxCell>
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-21" target="CW7KyH0B0hUuFeBV_yyw-18">
@@ -73,8 +73,8 @@
         <mxCell id="CW7KyH0B0hUuFeBV_yyw-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.39;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=15;" edge="1" parent="1" source="CW7KyH0B0hUuFeBV_yyw-22" target="CW7KyH0B0hUuFeBV_yyw-16">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="CW7KyH0B0hUuFeBV_yyw-22" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;generate some verification thing to post on twitter&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
-          <mxGeometry x="45.5" y="520" width="150" height="80" as="geometry" />
+        <mxCell id="CW7KyH0B0hUuFeBV_yyw-22" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;generate some verificationHash (crypto random bytes) to post on twitter&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=21;" vertex="1" parent="1">
+          <mxGeometry x="42.5" y="510" width="156.5" height="90" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
