@@ -9,7 +9,8 @@ export default async function handler(
 ) {
 
   if (req.method !== 'POST') {
-    res.status(500).json({ status: Status.Error, msg: 'this is a POST method', data: 'undefined' })
+    res.status(500).json({ status: 'Error' as Status.Error, msg: 'this is a POST method', data: 'undefined' });
+    return;
   }
 
   res.setHeader('Content-Type', 'application/json');
@@ -19,12 +20,13 @@ export default async function handler(
 
   try {
     const data = await verifyUserClient.verifyTwitter(handle, verificationHash);
-    if (data.msg !== 'success') {
+    if (data.status !== 'Success') {
       console.log(`err @ /verify : ${data.msg}`)
-      res.status(500)
+      res.status(500).json(data);
       return;
     } else {
       res.json(data);
+      return;
     }
   } catch (err) {
     console.log(`err @ /verify : ${err}`)

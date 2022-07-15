@@ -2,6 +2,7 @@ const { TwitterApi } = require('twitter-api-v2');
 const { ArweaveClient } = require('ar-wrapper');
 const { keccak256 } = require('@ethersproject/keccak256');
 const { toUtf8Bytes } = require('@ethersproject/strings');
+const { randomBytes } = require('crypto');
 
 const DEFAULT_OPTIONS = {
   projectName: 'verify_user',
@@ -24,6 +25,7 @@ class VerifyUserClient {
     const salt = randomBytes(32).toString();
     const hash = keccak256(toUtf8Bytes([signature, salt].join('-')));
     return {
+      status: 'Success',
       msg: 'success',
       hash
     }
@@ -58,29 +60,30 @@ class VerifyUserClient {
   // verification hash and handle are stored
   async verifyTwitter(handle, verificationHash) {
     const tweetTemplate = `${this.options.twitterMessage}`
-    this.twitterClient.get('statuses/user_timeline', {
-      screen_name: handle,
-      include_rts: false,
-      count: 5,
-      tweet_mode: 'extended',
-    }, (error, tweets, _) => {
-      if (!error) {
+    try {
+      const { data: { id: userId } } = await this.twitterClient.v2.userByUsername(handle);
+      const { data: tweets } = await this.twitterClient.v2.userTimeline(userId, { exclude: "replies", max_results: 5 });
+
+      if (tweets && tweets.length > 0) {
         for (const tweet of tweets) {
-          if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(verificationHash))) {
+          if (tweet.text.startsWith(tweetTemplate) && (tweet.text.includes(verificationHash))) {
             return {
               status: 'Success',
-              msg: 'succesfully verified twitter',
+              msg: `succesfully verified twitter, tweetId: ${tweet.id}`,
             }
           }
         }
       }
-      else {
-        return {
-          status: 'Error',
-          msg: 'could not find verified tweet'
-        }
+    } catch (err) {
+      return {
+        status: 'Error',
+        msg: `${err}`
       }
-    });
+    }
+    return {
+      status: 'Error',
+      msg: 'Could not find verified tweet'
+    }
   }
 
   // store signature and name

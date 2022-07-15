@@ -13,7 +13,7 @@ if (!process.env.ARWEAVE_ADDRESS || !process.env.ARWEAVE_KEY) {
 const adminAddress = process.env.ARWEAVE_ADDRESS || "";
 const arweaveKey = process.env.ARWEAVE_KEY || "";
 
-const TWEET_TEMPLATE = "I am verifying for verify-user. signature:"
+const TWEET_TEMPLATE = "I am verifying I own this account."
 
 const options = {
   twitterMessage: TWEET_TEMPLATE,

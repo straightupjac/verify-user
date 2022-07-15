@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse<IGenerateMessageReturn>
 ) {
   if (req.method !== 'GET') {
-    res.status(500).json({ status: Status.Error, msg: 'this is a GET method', messageToSign: 'undefined' })
+    res.status(500).json({ status: 'Error' as Status.Error, msg: 'this is a GET method', messageToSign: 'undefined' })
   }
 
   res.setHeader('Content-Type', 'application/json');
@@ -16,7 +16,7 @@ export default async function handler(
 
   const { handle } = req.query;
   if (!handle || typeof handle !== 'string') {
-    res.status(400).json({ status: Status.Error, msg: "handle is required", messageToSign: 'undefined' });
+    res.status(400).json({ status: 'Error' as Status.Error, msg: "handle is required", messageToSign: 'undefined' });
     return;
   }
 

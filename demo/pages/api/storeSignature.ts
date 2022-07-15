@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse<IReturn>
 ) {
   if (req.method !== 'POST') {
-    res.status(500).json({ status: Status.Error, msg: 'this is a POST method' })
+    res.status(500).json({ status: 'Error' as Status.Error, msg: 'this is a POST method' })
   }
 
   res.setHeader('Content-Type', 'application/json');
