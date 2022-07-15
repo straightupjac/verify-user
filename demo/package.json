@@ -14,12 +14,15 @@
     "@emotion/styled": "^11",
     "@rainbow-me/rainbowkit": "^0.4.2",
     "ethers": "^5.6.9",
+    "formik": "^2.2.9",
     "framer-motion": "^6",
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
-    "wagmi": "^0.5.9"
+    "verify-user": "^0.0.22",
+    "wagmi": "^0.5.9",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "18.0.4",

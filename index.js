@@ -27,38 +27,37 @@ class VerifyUserClient {
 
   // get hash for verification
   // optionally generated client side
-  createTwitterVerificationHash(handle, address) {
+  createTwitterVerificationHash(signature) {
     const salt = randomBytes(32).toString();
-    const hash = keccak256(toUtf8Bytes([address, handle, salt].join('-')));
+    const hash = keccak256(toUtf8Bytes([signature, salt].join('-')));
     return {
       msg: 'success',
       hash
     }
   }
 
+  // optionally generated on client-side
+  async generateMessageToSign(handle) {
+    if (!handle) {
+      return {
+        msg: "error: handle is required"
+      }
+    }
+    this.twitterClient.get_user({ username: handle }, (error, tweets, response) => {
+      if (error) return {
+        msg: "error: internal error"
+      }
+      return {
+        msg: 'success',
+        messageToSign: `Please sign to verify you own this address.`,
+        response
+      }
+    });
+  }
+
   // twitter handle and verification hash required, no address stored
   // verification hash and handle are stored
   async verifyTwitter(handle, verificationHash) {
-    const storeVerifiedTwitter = async (handle, verificationHash) => {
-      const DOC_TYPE = `${options.projectName}_doc_type`;
-      const VERIFICATION_DOC = `${options.projectName}_verification`;
-      const tags = {
-        hash: verificationHash,
-        handle,
-      };
-      tags[DOC_TYPE] = 'verification';
-      const doc = await this.arweaveClient.addDocument(VERIFICATION_DOC, verificationHash, tags);
-      if (doc.posted) {
-        return {
-          msg: 'success',
-        };
-      } else {
-        return {
-          msg: 'error adding verification hash'
-        }
-      }
-    }
-
     const tweetTemplate = `${this.options.twitterMessage}`
     this.twitterClient.get('statuses/user_timeline', {
       screen_name: handle,
@@ -69,13 +68,9 @@ class VerifyUserClient {
       if (!error) {
         for (const tweet of tweets) {
           if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(verificationHash))) {
-            storeVerifiedTwitter(handle, verificationHash).then((data) => {
-              return {
-                msg: 'succesfully verified twitter',
-                data: data
-              }
-            })
-            break;
+            return {
+              msg: 'succesfully verified twitter',
+            }
           }
         }
       }
@@ -85,27 +80,6 @@ class VerifyUserClient {
         }
       }
     });
-  }
-
-  // check if user is verified
-  async isVerifiedTwitter(handle) {
-    const DOC_TYPE = `${options.projectName}_doc_type`;
-    const tags = {
-      handle: handle,
-    };
-    tags[DOC_TYPE] = 'verification';
-
-    const verfiedDoc = await this.arweaveClient.getDocumentsByTags(tags)
-    if (verfiedDoc.length > 0) {
-      return {
-        msg: 'success user is verified',
-        hash: saltDoc[0].tags.hash,
-      }
-    } else {
-      return {
-        msg: 'user not found',
-      };
-    }
   }
 
   // store signature and name

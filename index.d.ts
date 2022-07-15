@@ -25,17 +25,16 @@ declare module "verify-user" {
     hash: string;
   }
 
-  // return type for isVerifiedTwitter
-
-  export interface IIsVerifiedTwitterReturn {
-    msg: string;
-    hash?: string;
-  }
-
   // return type for verifyTwitter
   export interface IVerifyTwitterReturn {
     msg: string;
     data: string;
+  }
+
+  export interface IGenerateMessageReturn {
+    msg: string;
+    messageToSign?: string
+    response?: any
   }
 
   export class VerifyUserClient {
@@ -51,19 +50,20 @@ declare module "verify-user" {
 
     // create a signature to use for Twitter verification
     // optional usage - can generate client side as well
-    createTwitterVerificationHash(handle: string, address: string): ITwitterVerificationReturn
+    createTwitterVerificationHash(signature: string): ITwitterVerificationReturn
 
     // twitter handle and signature required
     // optional: name, to display
     verifyTwitter(handle: string, verificationHash: string): Promise<IVerifyTwitterReturn>
-
-    // check if given handle has been previously verified
-    isVerifiedTwitter(handle: string): Promise<IIsVerifiedTwitterReturn>
 
     // store encrypted signedMessage and name on Arweave
     storeSignature(signedMessage: string, username: string): Promise<IReturn>
 
     // get user from Arweave with signed message
     getUser(signedMessage: string): Promise<IReturn>
+
+    // generate a message to sign
+    // optionally generated on client-side
+    generateMessageToSign(handle: string): Promise<IGenerateMessageReturn>
   }
 }

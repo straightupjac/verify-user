@@ -1,3 +1,4 @@
+import { SignInFlow } from '@components/SignInFlow'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -10,7 +11,7 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Verify User Demo
         </h1>
-
+        <SignInFlow />
         <p className={styles.description}>
           Check out the source code{' '}
           <a href="https://github.com/straightupjac/verify-user" target="_blank" rel="noreferrer">
