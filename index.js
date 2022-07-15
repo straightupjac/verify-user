@@ -1,5 +1,4 @@
-
-const Twitter = require('twitter');
+const { TwitterApi } = require('twitter-api-v2');
 const { ArweaveClient } = require('ar-wrapper');
 const { keccak256 } = require('@ethersproject/keccak256');
 const { toUtf8Bytes } = require('@ethersproject/strings');
@@ -8,19 +7,13 @@ const DEFAULT_OPTIONS = {
   projectName: 'verify_user',
   twitterMessage: 'I am verifying my Twitter'
 }
-
 class VerifyUserClient {
   twitterClient;
   arweaveClient;
   options;
 
   constructor(twitterConfig, adminAddress, arweaveKeyfile, options = DEFAULT_OPTIONS) {
-    this.twitterClient = new Twitter({
-      consumer_key: twitterConfig.consumer_key,
-      consumer_secret: twitterConfig.consumer_secret,
-      bearer_token: twitterConfig.bearer_token,
-    })
-
+    this.twitterClient = new TwitterApi(twitterConfig.bearer_token);
     this.arweaveClient = new ArweaveClient(adminAddress, arweaveKeyfile);
     this.options = options;
   }
@@ -36,23 +29,29 @@ class VerifyUserClient {
     }
   }
 
+  // returns a message that is ready to sign with twitter userID embedded inside
   // optionally generated on client-side
-  async generateMessageToSign(handle) {
+  async generateMessageToSign(handle, messageTemplate = "Please sign to verify you own this address (gassless).") {
     if (!handle) {
       return {
+        status: 'Error',
         msg: "error: handle is required"
       }
     }
-    this.twitterClient.get_user({ username: handle }, (error, tweets, response) => {
-      if (error) return {
-        msg: "error: internal error"
-      }
+    try {
+      const { data: { id } } = await this.twitterClient.v2.userByUsername(handle);
       return {
-        msg: 'success',
-        messageToSign: `Please sign to verify you own this address.`,
-        response
+        status: 'Success',
+        msg: "success",
+        messageToSign: `${messageTemplate} userId: ${id}`,
+        userId: id,
       }
-    });
+    } catch (err) {
+      return {
+        status: 'Error',
+        msg: `error: internal error retrieving user id, ${err}`,
+      }
+    }
   }
 
   // twitter handle and verification hash required, no address stored
@@ -69,6 +68,7 @@ class VerifyUserClient {
         for (const tweet of tweets) {
           if (tweet.full_text.startsWith(tweetTemplate) && (tweet.full_text.includes(verificationHash))) {
             return {
+              status: 'Success',
               msg: 'succesfully verified twitter',
             }
           }
@@ -76,6 +76,7 @@ class VerifyUserClient {
       }
       else {
         return {
+          status: 'Error',
           msg: 'could not find verified tweet'
         }
       }
@@ -88,6 +89,7 @@ class VerifyUserClient {
   async storeSignature(signedMessage, username) {
     if (!signedMessage) {
       return {
+        status: 'Error',
         msg: 'error, missing required fields'
       }
     }
@@ -101,11 +103,13 @@ class VerifyUserClient {
     const doc = await this.arweaveClient.addDocument(SIG_DOC, keccak256(toUtf8Bytes(signedMessage)), tags);
     if (doc.posted) {
       return {
+        status: 'Success',
         msg: 'success',
         username,
       };
     } else {
       return {
+        status: 'Error',
         msg: 'error adding signature'
       }
     }
@@ -120,11 +124,13 @@ class VerifyUserClient {
     const sigDoc = await this.arweaveClient.getDocumentsByTags(tags)
     if (sigDoc.length > 0) {
       return {
+        status: 'Success',
         msg: 'success',
         username: sigDoc[0].username,
       }
     } else {
       return {
+        status: 'Error',
         msg: "error couldn't find user",
       };
     }

@@ -1,34 +1,35 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { verifyUserClient } from '@utils/VerifyUserClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { IVerifyTwitterReturn, Status } from 'verify-user';
+import { IReturn, Status } from 'verify-user';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<IVerifyTwitterReturn>
+  res: NextApiResponse<IReturn>
 ) {
 
-  if (req.method !== 'POST') {
-    res.status(500).json({ status: Status.Error, msg: 'this is a POST method', data: 'undefined' })
+  if (req.method !== 'GET') {
+    res.status(500).json({ status: Status.Error, msg: 'this is a GET method' })
   }
 
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
 
-  const { handle, verificationHash } = req.body;
+  const { signature } = req.body;
 
   try {
-    const data = await verifyUserClient.verifyTwitter(handle, verificationHash);
-    if (data.msg !== 'success') {
-      console.log(`err @ /verify : ${data.msg}`)
+    const data = await verifyUserClient.getUser(signature)
+    if (data.status !== 'Success') {
+      console.log(`err @ /getUser : ${data.msg}`)
       res.status(500)
       return;
     } else {
       res.json(data);
     }
-  } catch (err) {
-    console.log(`err @ /verify : ${err}`)
+  }
+  catch (err) {
+    console.log(`err @ /getUser : ${err}`)
     res.status(500)
     return;
-  }
+  };
 }

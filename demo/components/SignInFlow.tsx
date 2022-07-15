@@ -149,7 +149,7 @@ const SignMessage = ({ handle, setModalState }: { handle: string, setModalState:
           <Text>
             Please sign a message to prove you control this account (gasless)
           </Text>
-          {signing ?
+          {loading ?
             <Button variant='solid' leftIcon={<Spinner />} disabled>Sign Message</Button> :
             <Button onClick={onSignMessage} variant='solid'>Sign Message</Button>}
           <Text fontSize='12px' color="red.600">

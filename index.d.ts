@@ -1,6 +1,11 @@
 declare module "verify-user" {
   type ArweaveClient = import("ar-wrapper").ArweaveClient;
-  type Twitter = import('twitter');
+  type TwitterClient = import('twitter-api-v2').TwitterApi;
+
+  enum Status {
+    Success = "Success",
+    Error = "Error"
+  }
 
   export interface IOptions {
     projectName: string
@@ -8,38 +13,39 @@ declare module "verify-user" {
   }
 
   export interface ITwitterConfig {
-    consumerKey: string;
-    consumer_secret: string;
     bearer_token: string;
   }
 
   // return type for storeSignature and getUser
   export interface IReturn {
+    status: Status;
     msg: string;
     username?: string
   }
 
   // return type for createTwitterVerificationHash
   export interface ITwitterVerificationReturn {
+    status: Status;
     msg: string;
     hash: string;
   }
 
   // return type for verifyTwitter
   export interface IVerifyTwitterReturn {
+    status: Status;
     msg: string;
     data: string;
   }
 
   export interface IGenerateMessageReturn {
+    status: Status;
     msg: string;
     messageToSign?: string
-    response?: any
   }
 
   export class VerifyUserClient {
     // underlying twitter client
-    twitterClient: Twitter;
+    twitterClient: TwitterClient;
     // underlying ar-wrapper client
     arweaveClient: ArweaveClient
     // custom options
@@ -64,6 +70,6 @@ declare module "verify-user" {
 
     // generate a message to sign
     // optionally generated on client-side
-    generateMessageToSign(handle: string): Promise<IGenerateMessageReturn>
+    generateMessageToSign(handle: string, messageTemplate?: string): Promise<IGenerateMessageReturn>
   }
 }
