@@ -1,11 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { verifyTweet } from '@utils/Testing';
 import { verifyUserClient } from '@utils/VerifyUserClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IVerifyTwitterReturn, Status } from 'verify-user';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<IVerifyTwitterReturn>
+  res: NextApiResponse<any>
 ) {
 
   if (req.method !== 'POST') {
@@ -19,16 +20,8 @@ export default async function handler(
   const { handle, verificationHash } = req.body;
 
   try {
-    const data = await verifyUserClient.verifyTwitter(handle, verificationHash);
-    console.log(handle, verificationHash, data)
-    if (data.status !== 'Success') {
-      console.log(`err @ /verify : ${data.msg}`)
-      res.status(500).json(data);
-      return;
-    } else {
-      res.json(data);
-      return;
-    }
+    const data = await verifyTweet(handle, verificationHash);
+    res.json(data);
   } catch (err) {
     console.log(`err @ /verify : ${err}`)
     res.status(500)

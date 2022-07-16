@@ -63,26 +63,23 @@ class VerifyUserClient {
     try {
       const { data: { id: userId } } = await this.twitterClient.v2.userByUsername(handle);
       const { data: tweets } = await this.twitterClient.v2.userTimeline(userId, { exclude: "replies", max_results: 5 });
-
-      if (tweets && tweets.length > 0) {
-        for (const tweet of tweets) {
-          if (tweet.text.startsWith(tweetTemplate) && (tweet.text.includes(verificationHash))) {
-            return {
-              status: 'Success',
-              msg: `succesfully verified twitter, tweetId: ${tweet.id}`,
-            }
+      for (const tweet of tweets.data) {
+        if (tweet.text.startsWith(tweetTemplate) && (tweet.text.includes(verificationHash))) {
+          return {
+            status: 'Success',
+            msg: `succesfully verified twitter, tweetId: ${tweet.id}`,
           }
         }
+      }
+      return {
+        status: 'Error',
+        msg: `Could not find tweet of the form ${tweetTemplate} and ${verificationHash} from @${handle} (${userId})`
       }
     } catch (err) {
       return {
         status: 'Error',
         msg: `${err}`
       }
-    }
-    return {
-      status: 'Error',
-      msg: 'Could not find verified tweet'
     }
   }
 
