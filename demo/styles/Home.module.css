@@ -1,12 +1,18 @@
 .container {
   padding: 0 2rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .main {
   min-height: 100vh;
+  max-width: 1200px;
   padding: 4rem 0;
-  flex: 1;
   display: flex;
+  text-align: center;
   flex-direction: column;
   justify-content: center;
   align-items: center;

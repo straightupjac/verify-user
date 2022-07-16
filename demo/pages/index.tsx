@@ -1,25 +1,27 @@
-import { Meta } from '@components/Meta'
+import { Text, VStack } from '@chakra-ui/react'
 import { SignInFlow } from '@components/SignInFlow'
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Verify User Demo
-        </h1>
-        <SignInFlow />
-        <p className={styles.description}>
-          Check out the source code{' '}
-          <a href="https://github.com/straightupjac/verify-user" target="_blank" rel="noreferrer">
-            <code className={styles.code}>straightupjac/verify-user</code>
-          </a>
-        </p>
-
+        <VStack gap={2}>
+          <h1 className={styles.title}>
+            Verify User Demo
+          </h1>
+          <Text fontSize='1.5rem'>
+            {`An experiement to verify a user's crypto address and twitter account are linked without storing any identifiable user data. No identifiable data will be stored.`}
+          </Text>
+          <SignInFlow />
+          <p className={styles.description}>
+            Check out the source code{' '}
+            <a href="https://github.com/straightupjac/verify-user" target="_blank" rel="noreferrer">
+              <code className={styles.code}>straightupjac/verify-user</code>
+            </a>
+          </p>
+        </VStack>
       </main>
     </div>
   )
