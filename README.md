@@ -1,7 +1,9 @@
 # Verify User
 An experiement to verify a user's address and twitter account are linked without storing any user data.
 
-Please don't take this too seriously and use at your own risk. I cannot guarantee anonyminity. Suggestions + PRs welcomed :)
+Use at your own risk. Suggestions welcomed :)
+
+Demo here: [verify-user-web3.vercel.app](https://verify-user-web3.vercel.app/)
 
 ## Prerequisites
 - Arweave public and private keys
@@ -38,5 +40,5 @@ const options = {
 
 ## Dependencies
 - [`ar-wrapper`](https://github.com/verses-xyz/ar-wrapper)
-- [`twitter`](https://github.com/desmondmorris/node-twitter)
+- [`twitter-api-v2`](https://github.com/plhery/node-twitter-api-v2)
 - [`@ethersproject`](https://github.com/ethers-io/ethers.js)
