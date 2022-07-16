@@ -52,7 +52,7 @@ export const SignInFlow = () => {
       {address ?
         username ?
           <Box>
-            Hello, {username}. You're signed in!
+            {`Hello, ${username}. You're signed in!`}
           </Box>
           :
           <Button onClick={onOpen} >
@@ -119,7 +119,7 @@ const Welcome = ({ setHandle, setModalState }: { setHandle: any, setModalState: 
             Please provide your Twitter handle (This willl not be saved)
           </Text>
           <InputGroup>
-            <InputLeftAddon children="@" />
+            <InputLeftAddon>@</InputLeftAddon>
             <Input
               id='handle'
               name='handle'
@@ -187,7 +187,7 @@ const SignMessage = ({ handle, setUsername, setModalState, messageToSign, setSig
         setModalState(SignInState.PostTwitter);
         setLoading(false);
       });
-  }, [signature])
+  }, [signature, setSignedMessage, setModalState, setUsername])
 
   const goBack = () => {
     setModalState(SignInState.PromptTwitter)
