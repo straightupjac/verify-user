@@ -249,7 +249,6 @@ const PostTwitter = ({ signedMessage, handle, setModalState }: { handle: string,
         console.log('err @ verifyTwitter', `${err}`);
         setMessage(`We had an issue verifying your Twitter. Did you Tweet the verification hash? . ${err}`)
       });
-    setModalState(SignInState.AskUsername)
   }
 
   const tweetVerification = () => {
@@ -329,7 +328,7 @@ const AskUsername = ({ handle, signedMessage, setUsername, setModalState }: { ha
   });
   const formik = useFormik({
     initialValues: {
-      username: handle,
+      username: '',
     },
     onSubmit: (value) => {
       onSubmit(value.username);
@@ -374,23 +373,23 @@ const AskUsername = ({ handle, signedMessage, setUsername, setModalState }: { ha
       <ModalCloseButton />
       <form onSubmit={formik.handleSubmit}>
         <ModalBody>
-          <Text>
-            Please choose a username for this app. This will be saved and will not be linked to your Twitter handle or address.
-          </Text>
-          <InputGroup>
-            <InputLeftAddon children="@" />
-            <Input
-              id='username'
-              name='username'
-              type="text"
-              value={formik.values.username}
-              onChange={formik.handleChange}
-
-            />
-          </InputGroup>
-          <Text fontSize='12px' color="red.600">
-            {message}
-          </Text>
+          <VStack gap={2}>
+            <Text>
+              Please choose a username for this app. This will be saved and will not be linked to your Twitter handle or address.
+            </Text>
+            <InputGroup>
+              <Input
+                id='username'
+                name='username'
+                type="text"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+              />
+            </InputGroup>
+            <Text fontSize='12px' color="red.600">
+              {message}
+            </Text>
+          </VStack>
         </ModalBody>
         <ModalFooter>
           {loading ?
