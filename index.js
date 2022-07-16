@@ -126,7 +126,7 @@ class VerifyUserClient {
       return {
         status: 'Success',
         msg: 'success',
-        username: sigDoc[0].username,
+        username: sigDoc[0].tags['username'],
       }
     } else {
       return {

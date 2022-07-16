@@ -16,14 +16,15 @@ export default async function handler(
 
   const { signature, username } = req.body;
   if (!signature || !username) {
-    res.status(500).json({ status: Status.Error, msg: "signature and username are required" })
+    res.status(500).json({ status: 'Error' as Status.Error, msg: "signature and username are required" });
+    return;
   }
 
   try {
     const data = await verifyUserClient.storeSignature(signature, username)
     if (data.status !== 'Success') {
       console.log(`err @ /storeSignature : ${data.msg}`)
-      res.status(500)
+      res.status(500).json(data)
       return;
     } else {
       res.json(data);
@@ -31,7 +32,7 @@ export default async function handler(
   }
   catch (err) {
     console.log(`err @ /storeSignature : ${err}`)
-    res.status(500)
+    res.status(500).json({ status: 'Error' as Status.Error, msg: `err @ /storeSignature : ${err}` })
     return;
   };
 }

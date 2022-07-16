@@ -1,6 +1,6 @@
 import { Box, Button, Center, Input, InputGroup, InputLeftAddon, Spinner, Text, useDisclosure, VStack } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Form, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
 import {
@@ -13,9 +13,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
-import { IGenerateMessageReturn, VerifyUserClient } from 'verify-user';
 import { FaTwitter } from 'react-icons/fa';
-import { handleWebpackExtenalForEdgeRuntime } from 'next/dist/build/webpack/plugins/middleware-plugin';
 
 enum SignInState {
   PromptTwitter,
@@ -52,9 +50,14 @@ export const SignInFlow = () => {
   return (
     <Box padding={10}>
       {address ?
-        <Button onClick={onOpen} >
-          Sign in
-        </Button>
+        username ?
+          <Box>
+            Hello, {username}. You're signed in!
+          </Box>
+          :
+          <Button onClick={onOpen} >
+            Sign in
+          </Button>
         :
         <VStack gap={2}>
           <Box>
@@ -71,9 +74,9 @@ export const SignInFlow = () => {
           {modalState === SignInState.SignMessage &&
             <SignMessage messageToSign={messageToSign} setSignedMessage={setSignedMessage} handle={handle} setModalState={setModalState} setUsername={setUsername} />}
           {modalState === SignInState.PostTwitter && <PostTwitter handle={handle} setModalState={setModalState} signedMessage={signedMessage} />}
-          {modalState === SignInState.WelcomeBack && <WelcomeBack username={username} />}
-          {modalState === SignInState.AskUsername && <AskUsername handle={handle} signedMessage={signedMessage} setUsername={setUsername} setModalState={setModalState} />}
-          {modalState === SignInState.Success && <Success username={username} />}
+          {modalState === SignInState.WelcomeBack && <WelcomeBack username={username} onClose={onClose} />}
+          {modalState === SignInState.AskUsername && <AskUsername signedMessage={signedMessage} setUsername={setUsername} setModalState={setModalState} />}
+          {modalState === SignInState.Success && <Success username={username} onClose={onClose} />}
         </ModalContent>
       </Modal>
     </Box>)
@@ -254,7 +257,6 @@ const PostTwitter = ({ signedMessage, handle, setModalState }: { handle: string,
   const tweetVerification = () => {
     fetch(`api/createTwitterVerificationHash/${signedMessage}`,).then((res) => res.json())
       .then((data) => {
-        console.log(data)
         // user exists, (is returning)
         if (data.status === 'Success') {
           setVerificationHash(data.hash);
@@ -300,7 +302,7 @@ const PostTwitter = ({ signedMessage, handle, setModalState }: { handle: string,
   )
 }
 
-const WelcomeBack = ({ username }: { username: string }) => {
+const WelcomeBack = ({ username, onClose }: { username: string, onClose: any }) => {
   return (
     <>
       <ModalHeader>Welcome back {username}</ModalHeader>
@@ -311,11 +313,14 @@ const WelcomeBack = ({ username }: { username: string }) => {
           Excited to have you back!
         </Text>
       </ModalBody>
+      <ModalFooter>
+        <Button variant='solid' onClick={onClose}>Done</Button>
+      </ModalFooter>
     </>
   )
 }
 
-const AskUsername = ({ handle, signedMessage, setUsername, setModalState }: { handle: string, signedMessage: string, setUsername: any, setModalState: any }) => {
+const AskUsername = ({ signedMessage, setUsername, setModalState }: { signedMessage: string, setUsername: any, setModalState: any }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -350,13 +355,12 @@ const AskUsername = ({ handle, signedMessage, setUsername, setModalState }: { ha
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        handle,
+        username,
         signature: signedMessage
       }),
     }).then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        if (data.status !== 'Success') {
+        if (data.status === 'Success') {
           setModalState(SignInState.Success);
         } else {
           setMessage(`We had an issue with generating a new profile. Please try again.`)
@@ -402,7 +406,7 @@ const AskUsername = ({ handle, signedMessage, setUsername, setModalState }: { ha
 }
 
 
-const Success = ({ username }: { username: string }) => {
+const Success = ({ username, onClose }: { username: string, onClose: any }) => {
   return (
     <>
       <ModalHeader>Welcome {username}</ModalHeader>
@@ -413,6 +417,9 @@ const Success = ({ username }: { username: string }) => {
           In the future, you will only have to sign a message to log in. You will not have to Tweet to verify your twitter account again.
         </Text>
       </ModalBody>
+      <ModalFooter>
+        <Button variant='solid' onClick={onClose}>Done</Button>
+      </ModalFooter>
     </>
   )
 }

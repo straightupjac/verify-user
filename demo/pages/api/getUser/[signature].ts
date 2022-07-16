@@ -24,7 +24,6 @@ export default async function handler(
 
   try {
     const data = await verifyUserClient.getUser(signature);
-    console.log(data)
     if (data.status !== 'Success') {
       console.log(`err @ /getUser : ${data.msg}`)
       res.status(500).json(data)

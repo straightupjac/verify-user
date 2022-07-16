@@ -5254,10 +5254,10 @@ verify-user@^0.0.21:
     ar-wrapper "^1.2.0"
     twitter "^1.7.1"
 
-verify-user@^0.0.41:
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/verify-user/-/verify-user-0.0.41.tgz#3bce651ed5187d08d44917d876b7fe5fd53db460"
-  integrity sha512-NCcHClfJDqWoSdvwgNRJGbWSDR9mhL9oldVq0ViUYbviddohCjRDmgsaz2sdMsziZSSiQ+lnJE7zTNRDligz2A==
+verify-user@^0.0.44:
+  version "0.0.44"
+  resolved "https://registry.yarnpkg.com/verify-user/-/verify-user-0.0.44.tgz#87725c416633ddd3c78f7484db28f03df127ff44"
+  integrity sha512-/hqFLX00YK+gWo/6Z+X2WNvk4v2YLBorvAP9mMg0oqsUBX2YpAzyqtQMdUR9eH/aMP8nWA0KaQKf2dPmuOsPVQ==
   dependencies:
     "@ethersproject/keccak256" "^5.6.1"
     "@ethersproject/strings" "^5.6.1"

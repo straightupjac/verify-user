@@ -21,7 +21,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
     "twitter-api-v2": "^1.12.3",
-    "verify-user": "^0.0.41",
+    "verify-user": "^0.0.44",
     "wagmi": "^0.5.9",
     "yup": "^0.32.11"
   },
