@@ -1,3 +1,4 @@
+import { Meta } from '@components/Meta'
 import { SignInFlow } from '@components/SignInFlow'
 import type { NextPage } from 'next'
 import Head from 'next/head'
