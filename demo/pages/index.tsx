@@ -15,7 +15,7 @@ const Home: NextPage = () => {
               Verify User Demo
             </h1>
             <Text fontSize='1.5rem'>
-              {`An experiement to verify a user's crypto address and twitter account are linked without storing any identifiable user data. No identifiable data will be stored.`}
+              {`An experiment to verify a user's crypto address and twitter account are linked without storing any identifiable user data using ZK (Zero Knowledge). No identifiable data will be stored. All hashes are stored publicly on Arweave.`}
             </Text>
             <SignInFlow />
             <p className={styles.description}>
