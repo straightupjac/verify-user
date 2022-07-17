@@ -73,7 +73,6 @@ function App({ Component, pageProps }: AppProps) {
         <ChakraProvider theme={theme}>
           <NavBar />
           <Component {...pageProps} />
-          <Footer />
         </ChakraProvider>
       </RainbowKitProvider>
     </WagmiConfig>
