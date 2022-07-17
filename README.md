@@ -1,5 +1,5 @@
 # Verify User
-An experiement to verify a user's address and twitter account are linked without storing any user data.
+An experiment to verify a user's address and twitter account are linked without storing any user data.
 
 Use at your own risk. Suggestions welcomed :)
 
