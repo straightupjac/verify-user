@@ -1,5 +1,5 @@
 # Verify User
-An experiement to verify a user's address and twitter account are linked without storing any user data.
+An experiment to verify a user's crypto address and twitter account are linked without storing any user data using [ZK-proofs](https://en.wikipedia.org/wiki/Zero-knowledge_proof). No identifiable data will be stored. All hashes are stored publicly on Arweave.
 
 Use at your own risk. Suggestions welcomed :)
 

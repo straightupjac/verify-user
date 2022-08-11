@@ -1,27 +1,41 @@
-import { Meta } from '@components/Meta'
+import { IconButton, Text, VStack } from '@chakra-ui/react'
+import Footer from '@components/Footer'
 import { SignInFlow } from '@components/SignInFlow'
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import { FaGithub } from 'react-icons/fa'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Verify User Demo
-        </h1>
-        <SignInFlow />
-        <p className={styles.description}>
-          Check out the source code{' '}
-          <a href="https://github.com/straightupjac/verify-user" target="_blank" rel="noreferrer">
-            <code className={styles.code}>straightupjac/verify-user</code>
-          </a>
-        </p>
-
-      </main>
-    </div>
+    <>
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <VStack gap={2}>
+            <h1 className={styles.title}>
+              Verify User Demo
+            </h1>
+            <Text fontSize='1.5rem'>
+              {`An experiment to verify a user's crypto address and twitter account are linked without storing any identifiable user data using ZK (Zero Knowledge). No identifiable data will be stored. All hashes are stored publicly on Arweave.`}
+            </Text>
+            <SignInFlow />
+            <p className={styles.description}>
+              Check out the source code{' '}
+              <a href="https://github.com/straightupjac/verify-user" target="_blank" rel="noreferrer">
+                <code className={styles.code}>straightupjac/verify-user</code>
+              </a>
+            </p>
+            <a href="https://github.com/straightupjac/verify-user" rel="noreferrer" target="_blank" >
+              <IconButton
+                aria-label="github icon"
+                colorScheme="dark"
+                variant="ghost"
+                icon={<FaGithub />}
+              />
+            </a>
+          </VStack>
+        </main>
+      </div>
+    </>
   )
 }
 
