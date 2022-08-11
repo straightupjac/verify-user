@@ -1,6 +1,6 @@
 {
   "name": "verify-user",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "verify your accounts are linked",
   "main": "index.js",
   "scripts": {},

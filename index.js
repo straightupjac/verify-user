@@ -98,7 +98,7 @@ class VerifyUserClient {
     const tags = {};
     tags[DOC_TYPE] = 'signature';
     tags['username'] = username;
-    tags['signedMessage'] = keccak256(toUtf8Bytes(signedMessage));
+    tags['signedMessageHash'] = keccak256(toUtf8Bytes(signedMessage));
 
     const doc = await this.arweaveClient.addDocument(SIG_DOC, keccak256(toUtf8Bytes(signedMessage)), tags);
     if (doc.posted) {
@@ -118,7 +118,7 @@ class VerifyUserClient {
   // get signature from arweave
   async getUser(signedMessage) {
     const tags = {
-      signedMessage: keccak256(toUtf8Bytes(signedMessage)),
+      signedMessageHash: keccak256(toUtf8Bytes(signedMessage)),
     };
     tags[`${this.options.projectName}_doc_type`] = 'signature';
     const sigDoc = await this.arweaveClient.getDocumentsByTags(tags)
